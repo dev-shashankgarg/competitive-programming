@@ -1,70 +1,64 @@
-package com.contest.abc183;
+package contest.div2.n683;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
-public class QueenOnGrid {
+public class E {
 
-  private static int length;
-  private static int width;
-  private static HashSet<Integer> walls;
-  private static int[][] dp;
-  private static int[][] preRow;
-  private static int[][] preCol;
-  private static int[][] preDia;
-  private static int MOD = 1_000_000_007;
+  private static int n;
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    length = scan.scanInt();
-    width = scan.scanInt();
+    n = scan.scanInt();
+    List<Integer> li = new ArrayList<>();
 
-    walls = new HashSet<>();
-
-    for (int i = 0; i < length; i++) {
-      String input = scan.scanString();
-      for (int j = 0; j < input.length(); j++) {
-        if (input.charAt(j) == '#') {
-          walls.add(i * width + j);
-        }
-      }
+    for (int i = 0; i < n; i++) {
+      li.add(scan.scanInt());
     }
 
-    dp = new int[length + 1][width + 1];
-    preRow = new int[length + 1][width + 1];
-    preCol = new int[length + 1][width + 1];
-    preDia = new int[length + 1][width + 1];
-
-    dp[1][1] = preCol[1][1] = preDia[1][1] = preRow[1][1] = 1;
-
-    for (int i = 1; i < dp.length; i++) {
-      for (int j = 1; j < dp[i].length; j++) {
-        if (i == 1 && j == 1) {
-          continue;
-        }
-
-        if (walls.contains((i - 1) * width + j - 1)) {
-          continue;
-        }
-
-        dp[i][j] = (preRow[i][j - 1] + (preDia[i - 1][j - 1] + preCol[i - 1][j]) % MOD) % MOD;
-        preRow[i][j] = preCol[i][j] = preDia[i][j] = dp[i][j];
-
-        preRow[i][j] = (preRow[i][j] + preRow[i][j - 1]) % MOD;
-        preCol[i][j] = (preCol[i][j] + preCol[i - 1][j]) % MOD;
-        preDia[i][j] = (preDia[i][j] + preDia[i - 1][j - 1]) % MOD;
-      }
-    }
-
-    print.printLine(Integer.toString(dp[length][width]));
+    int answer = solve(li, 30);
+    print.printLine(Integer.toString(answer));
     print.close();
+  }
 
+  private static int solve(List<Integer> li, int bitIndex) {
+
+    if (li.isEmpty()) {
+      return 0;
+    }
+
+    List<Integer> s0 = new ArrayList<>();
+    List<Integer> s1 = new ArrayList<>();
+
+    for (int num : li) {
+      if (((num >> bitIndex) & 1) == 1) {
+        s1.add(num);
+      } else {
+        s0.add(num);
+      }
+    }
+
+    if (s0.size() >= 2 && s1.size() >= 2) {
+      return Math.min(s0.size() - 1 + solve(s1, bitIndex - 1),
+          s1.size() - 1 + solve(s0, bitIndex - 1));
+    }
+
+    if (s1.size() >= 2) {
+      return solve(s1, bitIndex - 1);
+    }
+
+    if (s0.size() >= 2) {
+      return solve(s0, bitIndex - 1);
+    }
+
+    return 0;
   }
 
   static class Scan {

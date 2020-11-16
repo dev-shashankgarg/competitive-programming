@@ -1,68 +1,61 @@
-package com.contest.abc183;
+package contest.div2.n683;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class QueenOnGrid {
-
-  private static int length;
-  private static int width;
-  private static HashSet<Integer> walls;
-  private static int[][] dp;
-  private static int[][] preRow;
-  private static int[][] preCol;
-  private static int[][] preDia;
-  private static int MOD = 1_000_000_007;
+public class C {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    length = scan.scanInt();
-    width = scan.scanInt();
+    int tests = scan.scanInt();
+    IntStream.range(0, tests).forEach(test -> {
+      int num = scan.scanInt();
+      long W = Long.parseLong(scan.scanString());
+      List<Point> data = new ArrayList<>();
 
-    walls = new HashSet<>();
+      for (int i = 0; i < num; i++) {
+        int r = scan.scanInt();
+        data.add(new Point(r, i));
+      }
 
-    for (int i = 0; i < length; i++) {
-      String input = scan.scanString();
-      for (int j = 0; j < input.length(); j++) {
-        if (input.charAt(j) == '#') {
-          walls.add(i * width + j);
+      data.sort(Comparator.comparingInt(p1 -> p1.value));
+
+      long bag = 0;
+      boolean found = false;
+      StringJoiner sj = new StringJoiner(" ");
+      int count = 0;
+
+      for (int j = data.size() - 1; j >= 0; j--) {
+        if (bag + data.get(j).value > W) {
+        } else {
+          bag += data.get(j).value;
+          count++;
+          sj.add(Integer.toString(data.get(j).index));
+          if (bag >= ((W + 1) / 2)) {
+            found = true;
+            break;
+          }
         }
       }
-    }
 
-    dp = new int[length + 1][width + 1];
-    preRow = new int[length + 1][width + 1];
-    preCol = new int[length + 1][width + 1];
-    preDia = new int[length + 1][width + 1];
-
-    dp[1][1] = preCol[1][1] = preDia[1][1] = preRow[1][1] = 1;
-
-    for (int i = 1; i < dp.length; i++) {
-      for (int j = 1; j < dp[i].length; j++) {
-        if (i == 1 && j == 1) {
-          continue;
-        }
-
-        if (walls.contains((i - 1) * width + j - 1)) {
-          continue;
-        }
-
-        dp[i][j] = (preRow[i][j - 1] + (preDia[i - 1][j - 1] + preCol[i - 1][j]) % MOD) % MOD;
-        preRow[i][j] = preCol[i][j] = preDia[i][j] = dp[i][j];
-
-        preRow[i][j] = (preRow[i][j] + preRow[i][j - 1]) % MOD;
-        preCol[i][j] = (preCol[i][j] + preCol[i - 1][j]) % MOD;
-        preDia[i][j] = (preDia[i][j] + preDia[i - 1][j - 1]) % MOD;
+      if (found) {
+        print.printLine(Integer.toString(count));
+        print.printLine(sj.toString());
+      } else {
+        print.printLine("-1");
       }
-    }
+    });
 
-    print.printLine(Integer.toString(dp[length][width]));
     print.close();
 
   }
@@ -203,6 +196,17 @@ public class QueenOnGrid {
         bw.close();
       } catch (IOException ignored) {
       }
+    }
+  }
+
+  static class Point {
+
+    private int value;
+    private int index;
+
+    public Point(int value, int index) {
+      this.value = value;
+      this.index = index + 1;
     }
   }
 

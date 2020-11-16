@@ -1,70 +1,53 @@
-package com.contest.abc183;
+package contest.div2.n683;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashSet;
 import java.util.InputMismatchException;
 
-public class QueenOnGrid {
+public class D {
 
-  private static int length;
-  private static int width;
-  private static HashSet<Integer> walls;
-  private static int[][] dp;
-  private static int[][] preRow;
-  private static int[][] preCol;
-  private static int[][] preDia;
-  private static int MOD = 1_000_000_007;
+  private static String a;
+  private static String b;
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
+    scan.scanInt();
+    scan.scanInt();
 
-    length = scan.scanInt();
-    width = scan.scanInt();
+    a = scan.scanString();
+    b = scan.scanString();
 
-    walls = new HashSet<>();
+    int answer = lcs(a, b);
+    print.printLine(Integer.toString(answer));
+    print.close();
+  }
 
-    for (int i = 0; i < length; i++) {
-      String input = scan.scanString();
-      for (int j = 0; j < input.length(); j++) {
-        if (input.charAt(j) == '#') {
-          walls.add(i * width + j);
-        }
-      }
-    }
-
-    dp = new int[length + 1][width + 1];
-    preRow = new int[length + 1][width + 1];
-    preCol = new int[length + 1][width + 1];
-    preDia = new int[length + 1][width + 1];
-
-    dp[1][1] = preCol[1][1] = preDia[1][1] = preRow[1][1] = 1;
+  private static int lcs(String a, String b) {
+    int[][] dp = new int[a.length() + 1][b.length() + 1];
+    int max = 0;
 
     for (int i = 1; i < dp.length; i++) {
       for (int j = 1; j < dp[i].length; j++) {
-        if (i == 1 && j == 1) {
-          continue;
+
+        char ac = a.charAt(i - 1);
+        char bc = b.charAt(j - 1);
+
+        if (ac == bc) {
+          dp[i][j] = 2 + dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]) - 1;
         }
 
-        if (walls.contains((i - 1) * width + j - 1)) {
-          continue;
-        }
+        dp[i][j] = Math.max(0, dp[i][j]);
+        max = Math.max(max, dp[i][j]);
 
-        dp[i][j] = (preRow[i][j - 1] + (preDia[i - 1][j - 1] + preCol[i - 1][j]) % MOD) % MOD;
-        preRow[i][j] = preCol[i][j] = preDia[i][j] = dp[i][j];
-
-        preRow[i][j] = (preRow[i][j] + preRow[i][j - 1]) % MOD;
-        preCol[i][j] = (preCol[i][j] + preCol[i - 1][j]) % MOD;
-        preDia[i][j] = (preDia[i][j] + preDia[i - 1][j - 1]) % MOD;
       }
     }
 
-    print.printLine(Integer.toString(dp[length][width]));
-    print.close();
-
+    return max;
   }
 
   static class Scan {
@@ -203,6 +186,28 @@ public class QueenOnGrid {
         bw.close();
       } catch (IOException ignored) {
       }
+    }
+  }
+
+  static class Record {
+
+    private char letter;
+    private int aIndex;
+    private int bIndex;
+
+    public Record(char letter, int aIndex, int bIndex) {
+      this.letter = letter;
+      this.aIndex = aIndex;
+      this.bIndex = bIndex;
+    }
+
+    @Override
+    public String toString() {
+      return "Record{" +
+          "letter=" + letter +
+          ", aIndex=" + aIndex +
+          ", bIndex=" + bIndex +
+          '}';
     }
   }
 
