@@ -1,90 +1,48 @@
-package contest.div2.n685;
+package com.contest.abc184;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.stream.IntStream;
 
-public class D {
-
-  private static long distance;
-  private static long euc_distance;
-
-  private static long move;
-
-  private static Map<Long, Boolean> cache;
+public class C {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    int tests = scan.scanInt();
-    IntStream.range(0, tests).forEach(test -> {
-      distance = scan.scanInt();
-      euc_distance = (long) Math.pow(distance, 2);
-      move = scan.scanInt();
+    long x1 = scan.scanInt();
+    long y1 = scan.scanInt();
 
-      long max = distance;
-      long x = 0, y = distance;
+    long x2 = scan.scanInt();
+    long y2 = scan.scanInt();
 
-      for (int _x = 0; _x < distance; _x += move) {
-        long y_sq = euc_distance - (long) Math.pow(_x, 2);
-
-        long y_root = (long) Math.sqrt(y_sq);
-
-        if (y_root * y_root == y_sq) {
-          if (_x + y_root > max) {
-            max = Math.max(max, _x + y_root);
-            x = _x;
-            y = y_root;
-          }
-        }
-      }
-
-      long steps = x / move + y / move;
-
-      //print.printLine(x + " " + y);
-      print.printLine(steps % 2 == 1 ? "Ashish" : "Utkarsh");
-
-//      cache = new HashMap<>();
-//
-//      boolean aWin = solve(0, 0);
-//      print.printLine(aWin ? "Ashish" : "Utkarsh");
-    });
+    if (x1 == x2 && y1 == y2) {
+      print.printLine(Integer.toString(0));
+    } else if (canReach(x1, y1, x2, y2)) {
+      print.printLine(Integer.toString(1));
+    } else if (Math.abs(x1 - y1) % 2 == Math.abs(x2 - y2) % 2) {
+      print.printLine(Integer.toString(2));
+    } else if (canReach(x2, y1 + x2 - x1, x2, y2)) {
+      print.printLine(Integer.toString(2));
+    } else if (canReach(x1 + y2 - y1, y2, x2, y2)) {
+      print.printLine(Integer.toString(2));
+    } else if (canReach(x2, y1 + x1 - x2, x2, y2)) {
+      print.printLine(Integer.toString(2));
+    } else if (canReach(x1 + y1 - y2, y2, x2, y2)) {
+      print.printLine(Integer.toString(2));
+    } else {
+      print.printLine(Integer.toString(3));
+    }
 
     print.close();
 
   }
 
-  private static long key(long x, long y) {
-    return x * (distance + 10) + y;
-  }
-
-  private static boolean solve(long x, long y) {
-
-    long key = key(x, y);
-    Boolean val = cache.get(key);
-    if (val != null) {
-      return val;
-    }
-
-    boolean win = false;
-    if (canMove(x + move, y)) {
-      win = !solve(x + move, y);
-    }
-
-    if (!win && canMove(x, y + move)) {
-      win = !solve(x, y + move);
-    }
-    cache.put(key, win);
-    return win;
-  }
-
-  private static boolean canMove(long x, long y) {
-    return (long) (Math.pow(x, 2) + Math.pow(y, 2)) <= euc_distance;
+  private static boolean canReach(long x1, long y1, long x2, long y2) {
+    return (x1 + y1 == x2 + y2) || (x1 - y1 == x2 - y2) || (Math.abs(x1 - x2) + Math.abs(y1 - y2)
+        <= 3);
   }
 
   static class Scan {

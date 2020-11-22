@@ -1,90 +1,39 @@
-package contest.div2.n685;
+package contest.cook124b;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.stream.IntStream;
 
-public class D {
-
-  private static long distance;
-  private static long euc_distance;
-
-  private static long move;
-
-  private static Map<Long, Boolean> cache;
+public class A {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    int tests = scan.scanInt();
-    IntStream.range(0, tests).forEach(test -> {
-      distance = scan.scanInt();
-      euc_distance = (long) Math.pow(distance, 2);
-      move = scan.scanInt();
+    int n = scan.scanInt();
+    int m = scan.scanInt();
+    int k = scan.scanInt();
 
-      long max = distance;
-      long x = 0, y = distance;
+    int eligible = 0;
 
-      for (int _x = 0; _x < distance; _x += move) {
-        long y_sq = euc_distance - (long) Math.pow(_x, 2);
+    for (int i = 0; i < n; i++) {
 
-        long y_root = (long) Math.sqrt(y_sq);
-
-        if (y_root * y_root == y_sq) {
-          if (_x + y_root > max) {
-            max = Math.max(max, _x + y_root);
-            x = _x;
-            y = y_root;
-          }
-        }
+      int sum = 0;
+      for (int j = 0; j < k; j++) {
+        sum += scan.scanInt();
       }
 
-      long steps = x / move + y / move;
+      int ques = scan.scanInt();
 
-      //print.printLine(x + " " + y);
-      print.printLine(steps % 2 == 1 ? "Ashish" : "Utkarsh");
+      eligible += (ques <= 10 && sum >= m) ? 1 : 0;
+    }
 
-//      cache = new HashMap<>();
-//
-//      boolean aWin = solve(0, 0);
-//      print.printLine(aWin ? "Ashish" : "Utkarsh");
-    });
-
+    print.printLine(Integer.toString(eligible));
     print.close();
 
-  }
 
-  private static long key(long x, long y) {
-    return x * (distance + 10) + y;
-  }
-
-  private static boolean solve(long x, long y) {
-
-    long key = key(x, y);
-    Boolean val = cache.get(key);
-    if (val != null) {
-      return val;
-    }
-
-    boolean win = false;
-    if (canMove(x + move, y)) {
-      win = !solve(x + move, y);
-    }
-
-    if (!win && canMove(x, y + move)) {
-      win = !solve(x, y + move);
-    }
-    cache.put(key, win);
-    return win;
-  }
-
-  private static boolean canMove(long x, long y) {
-    return (long) (Math.pow(x, 2) + Math.pow(y, 2)) <= euc_distance;
   }
 
   static class Scan {

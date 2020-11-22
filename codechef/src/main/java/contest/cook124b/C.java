@@ -1,21 +1,19 @@
-package contest.div2.n685;
+package contest.cook124b;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.IntStream;
 
-public class D {
+public class C {
 
-  private static long distance;
-  private static long euc_distance;
-
-  private static long move;
-
-  private static Map<Long, Boolean> cache;
+  private static int an;
 
   public static void main(String[] args) {
     Print print = new Print();
@@ -23,68 +21,65 @@ public class D {
 
     int tests = scan.scanInt();
     IntStream.range(0, tests).forEach(test -> {
-      distance = scan.scanInt();
-      euc_distance = (long) Math.pow(distance, 2);
-      move = scan.scanInt();
 
-      long max = distance;
-      long x = 0, y = distance;
-
-      for (int _x = 0; _x < distance; _x += move) {
-        long y_sq = euc_distance - (long) Math.pow(_x, 2);
-
-        long y_root = (long) Math.sqrt(y_sq);
-
-        if (y_root * y_root == y_sq) {
-          if (_x + y_root > max) {
-            max = Math.max(max, _x + y_root);
-            x = _x;
-            y = y_root;
-          }
-        }
-      }
-
-      long steps = x / move + y / move;
-
-      //print.printLine(x + " " + y);
-      print.printLine(steps % 2 == 1 ? "Ashish" : "Utkarsh");
-
-//      cache = new HashMap<>();
-//
-//      boolean aWin = solve(0, 0);
-//      print.printLine(aWin ? "Ashish" : "Utkarsh");
+      int k = scan.scanInt();
+      int x = scan.scanInt();
+      an = Integer.MAX_VALUE;
+      int ans = solve(k, x);
+      print.printLine(Integer.toString(ans));
     });
 
     print.close();
 
   }
 
-  private static long key(long x, long y) {
-    return x * (distance + 10) + y;
+  private static int solve(int k, int x) {
+    int min = k - 2 + 1 + x;
+    HashMap<Integer, Integer> map = new HashMap<>();
+    int i = 2;
+    while (x > 1) {
+      if (x % i == 0) {
+        int val = map.getOrDefault(i, 1);
+        map.put(i, val * i);
+        x /= i;
+      } else {
+        i++;
+      }
+    }
+
+    if (k >= map.values().size()) {
+      int sum = 0;
+      for (int y : map.values()) {
+        sum += y;
+      }
+      sum += (k - map.values().size());
+
+      min = Math.min(sum, min);
+      return min;
+    }
+
+    int[] buckets = new int[k];
+    Arrays.fill(buckets, 1);
+    findMinBucket(buckets, new ArrayList<>(map.values()), 0);
+    min = Math.min(an, min);
+
+    return min;
   }
 
-  private static boolean solve(long x, long y) {
-
-    long key = key(x, y);
-    Boolean val = cache.get(key);
-    if (val != null) {
-      return val;
+  private static void findMinBucket(int[] buckets, List<Integer> pri, int index) {
+    if (index == pri.size()) {
+      int sum = 0;
+      for (int x : buckets) {
+        sum += x;
+      }
+      an = Math.min(sum, an);
+    } else {
+      for (int k = 0; k < buckets.length; k++) {
+        buckets[k] *= pri.get(index);
+        findMinBucket(buckets, pri, index + 1);
+        buckets[k] /= pri.get(index);
+      }
     }
-
-    boolean win = false;
-    if (canMove(x + move, y)) {
-      win = !solve(x + move, y);
-    }
-
-    if (!win && canMove(x, y + move)) {
-      win = !solve(x, y + move);
-    }
-    cache.put(key, win);
-    return win;
-  }
-
-  private static boolean canMove(long x, long y) {
-    return (long) (Math.pow(x, 2) + Math.pow(y, 2)) <= euc_distance;
   }
 
   static class Scan {
