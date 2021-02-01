@@ -1,14 +1,16 @@
-Java Template for Kickstart Submission
+package com.kickstart.y2013.a;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.Collections;
 import java.util.InputMismatchException;
+import java.util.PriorityQueue;
+import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
-public class Solution {
+public class Sorting {
 
   public static void main(String[] args) {
     Print print = new Print();
@@ -16,12 +18,52 @@ public class Solution {
 
     int tests = scan.scanInt();
     IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
+
+      int n = scan.scanInt();
+      int[] arr = new int[n];
+
+      for (int i = 0; i < n; i++) {
+        arr[i] = scan.scanInt();
+      }
+
+      solve(arr);
+
+      print.printLine(String.format("Case #%d: %s", test, toString(arr)));
 
     });
 
     print.close();
+  }
+
+  private static void solve(int[] arr) {
+    PriorityQueue<Integer> evens = new PriorityQueue<>(Collections.reverseOrder());
+    PriorityQueue<Integer> odds = new PriorityQueue<>();
+
+    for (int x : arr) {
+      if (x % 2 == 0) {
+        evens.add(x);
+      } else {
+        odds.add(x);
+      }
+    }
+
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] % 2 == 0) {
+        arr[i] = evens.poll();
+      } else {
+        arr[i] = odds.poll();
+      }
+    }
+
+
+  }
+
+  private static String toString(int[] arr) {
+    StringJoiner sj = new StringJoiner(" ");
+    for (int x : arr) {
+      sj.add(Integer.toString(x));
+    }
+    return sj.toString();
   }
 
   static class Scan {
@@ -164,10 +206,3 @@ public class Solution {
   }
 
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file
