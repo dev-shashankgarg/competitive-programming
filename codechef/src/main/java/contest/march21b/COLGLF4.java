@@ -34,7 +34,7 @@ public class COLGLF4 {
       h = Math.min(h, 3 * n);
 
       //long ans = valid(e, h, n) ? solve(e, h, 0) : -1;
-      print.printLine(Long.toString(solve2(e, h)));
+      //print.printLine(Long.toString(solve2(e, h)));
     });
 
     print.close();
@@ -108,58 +108,58 @@ public class COLGLF4 {
 //    return -1;
 //  }
 
-  private static long solve2(int e, int h) {
-    int shared = bs(0, Math.min(e, h));
-    if (shared < 0) {
-      return -1;
-    }
-    shared = Math.min(shared, n);
-    int csf = shared * c;
-    e -= shared;
-    h -= shared;
-    n -= shared;
-
-    if (n == 0) {
-      return csf;
-    }
-
-    if (c <= a && c <= b) {
-      int x = Math.min(e, h);
-      if (x >= n) {
-        return csf + (long) n * c;
-      } else {
-        e -= x;
-        h -= x;
-        n -= x;
-        csf += x * c;
-        if (e > 0) {
-          return csf + (long) a * n;
-        } else {
-          return csf + (long) b * n;
-        }
-      }
-    } else if (c >= a && c >= b) {
-      if (a <= b) {
-        int x = e / 2;
-        if (x >= n) {
-          return csf + (long) n * a;
-        } else {
-          n -= x;
-          return csf + (long) x * a + (long) n * b;
-        }
-      } else {
-        int x = h / 3;
-        if (x >= n) {
-          return csf + (long) n * b;
-        } else {
-          n -= x;
-          return csf + (long) x * b + (long) n * a;
-        }
-      }
-    }
-    
-
-  }
+//  private static long solve2(int e, int h) {
+//    int shared = bs(0, Math.min(e, h));
+//    if (shared < 0) {
+//      return -1;
+//    }
+//    shared = Math.min(shared, n);
+//    int csf = shared * c;
+//    e -= shared;
+//    h -= shared;
+//    n -= shared;
+//
+//    if (n == 0) {
+//      return csf;
+//    }
+//
+//    if (c <= a && c <= b) {
+//      int x = Math.min(e, h);
+//      if (x >= n) {
+//        return csf + (long) n * c;
+//      } else {
+//        e -= x;
+//        h -= x;
+//        n -= x;
+//        csf += x * c;
+//        if (e > 0) {
+//          return csf + (long) a * n;
+//        } else {
+//          return csf + (long) b * n;
+//        }
+//      }
+//    } else if (c >= a && c >= b) {
+//      if (a <= b) {
+//        int x = e / 2;
+//        if (x >= n) {
+//          return csf + (long) n * a;
+//        } else {
+//          n -= x;
+//          return csf + (long) x * a + (long) n * b;
+//        }
+//      } else {
+//        int x = h / 3;
+//        if (x >= n) {
+//          return csf + (long) n * b;
+//        } else {
+//          n -= x;
+//          return csf + (long) x * b + (long) n * a;
+//        }
+//      }
+//    }
+//
+//
+//  }
 
   private static int bs(int l, int r) {
 
