@@ -1,4 +1,4 @@
-package com.kickstart.y2021.b;
+package contest.div2.n716;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,136 +7,40 @@ import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
 import java.util.stream.IntStream;
 
-public class C {
-
-  //private static List<Integer> primes;
+public class B {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    primes = new ArrayList<>();
-//    int[] ss = new int[1_000_000];
-//    ss[0] = 1;
-//    ss[1] = 1;
-//    for (int i = 2; i < ss.length; i++) {
-//      if (ss[i] == 0) {
-//        primes.add(i);
-//        for (int j = i + i; j < ss.length; j += i) {
-//          ss[j] = 1;
-//        }
-//      }
-//    }
-
-//    for (int i = 6; i <= 1_000_000_009; i++) {
-//      long a = solve(i);
-//      long b = solve2(i);
-//
-//      if (a != b) {
-//        System.out.printf("Case %d -> Expected : %d , Actual : %d %n", i, b, a);
-//      }
-//    }
-
     int tests = scan.scanInt();
-    IntStream.rangeClosed(1, tests).forEach(test -> {
-      String s = scan.scanString();
-      long ans = solve(Long.parseLong(s));
-      print.printLine(String.format("Case #%d: %d", test, ans));
+    IntStream.range(0, tests).forEach(t -> {
+      String[] s = scan.scanString().split(" ");
+      long n = Long.parseLong(s[0]);
+      long k = Long.parseLong(s[1]);
 
+      long ans = pow(n, k, 1_000_000_007);
+      print.printLine(Long.toString(ans));
     });
 
     print.close();
+
   }
 
-//  private static long solve2(int x) {
-//    for (int i = 2; i < primes.size() - 1; i++) {
-//      if (((long) primes.get(i) * (long) (primes.get(i - 1)) > x)) {
-//        return (long) primes.get(i - 2) * (long) (primes.get(i - 1));
-//      }
-//    }
-//    return -1;
-//  }
-
-  private static long solve(long num) {
-
-    //4216282
-    long start = (long) Math.ceil(Math.sqrt(num));
-    long first = start;
-    long second = start;
-
-    while (first > 0 && !isPrime(first, 100)) {
-      first--;
-    }
-
-    if (second != first) {
-      while (second > 0 && !isPrime(second, 100)) {
-        second++;
-      }
-
-      if (second * first <= num) {
-        return second * first;
-      }
-
-    }
-    second = first - 1;
-    while (second > 0 && !isPrime(second, 100)) {
-      second--;
-    }
-
-    return second * first;
-  }
-
-  static long pow(long n, long k, long m) {
-    if (k == 0) {
+  static long pow(long a, long n, long MOD) {
+    if (n == 0) {
       return 1;
     }
-
-    long x = pow(n, k / 2, m);
-    if ((k & 1) == 1) {
-      return ((n % m * x % m) * x % m) % m;
+    long x = pow(a, n / 2, MOD);
+    if (n % 2 == 1) {
+      return multiply(multiply(x, x, MOD), a, MOD);
+    } else {
+      return multiply(x, x, MOD);
     }
-    return (x % m * x % m) % m;
   }
 
-  private static boolean singleTest(long n) {
-    long exp = n - 1;
-
-    while ((exp & 1) == 0) {
-      exp = exp >> 1;
-    }
-
-    long a = 2 + (long) (Math.random() * (n - 3));
-
-    if (pow(a, exp, n) == 1) {
-      return true;
-    }
-
-    while (exp < n - 1) {
-      if ((n + pow(a, exp, n)) % n == n - 1) {
-        return true;
-      }
-      exp = exp << 1;
-    }
-
-    return false;
-  }
-
-
-  static boolean isPrime(long n, long trials) {
-
-    if (n == 1) {
-      return false;
-    }
-    if (n == 2) {
-      return true;
-    }
-
-    for (int i = 0; i < trials; i++) {
-      if (!singleTest(n)) {
-        return false;
-      }
-    }
-    return true;
+  static long multiply(long a, long b, long MOD) {
+    return (a % MOD * b % MOD) % MOD;
   }
 
   static class Scan {
@@ -240,7 +144,7 @@ public class C {
     }
 
     private boolean isWhiteSpace(int n) {
-      if (n == ' ' || n == '\n' || n == '\r' || n == '\t' || n == -1) {
+      if (n == '\n' || n == '\r' || n == '\t' || n == -1) {
         return true;
       }
       return false;

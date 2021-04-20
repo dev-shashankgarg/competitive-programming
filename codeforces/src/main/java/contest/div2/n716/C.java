@@ -1,142 +1,153 @@
-package com.kickstart.y2021.b;
+package contest.div2.n716;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
+import java.util.StringJoiner;
+import java.util.TreeMap;
 
 public class C {
-
-  //private static List<Integer> primes;
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    primes = new ArrayList<>();
-//    int[] ss = new int[1_000_000];
-//    ss[0] = 1;
-//    ss[1] = 1;
-//    for (int i = 2; i < ss.length; i++) {
-//      if (ss[i] == 0) {
-//        primes.add(i);
-//        for (int j = i + i; j < ss.length; j += i) {
-//          ss[j] = 1;
-//        }
-//      }
+//    for (int i = 2; i <= 20; i += 1) {
+//      brute_force(i);
 //    }
 
-//    for (int i = 6; i <= 1_000_000_009; i++) {
-//      long a = solve(i);
-//      long b = solve2(i);
-//
-//      if (a != b) {
-//        System.out.printf("Case %d -> Expected : %d , Actual : %d %n", i, b, a);
-//      }
-//    }
-
-    int tests = scan.scanInt();
-    IntStream.rangeClosed(1, tests).forEach(test -> {
-      String s = scan.scanString();
-      long ans = solve(Long.parseLong(s));
-      print.printLine(String.format("Case #%d: %d", test, ans));
-
-    });
-
+    int n = scan.scanInt();
+    solve(print, n);
     print.close();
+
+
   }
 
-//  private static long solve2(int x) {
-//    for (int i = 2; i < primes.size() - 1; i++) {
-//      if (((long) primes.get(i) * (long) (primes.get(i - 1)) > x)) {
-//        return (long) primes.get(i - 2) * (long) (primes.get(i - 1));
-//      }
-//    }
-//    return -1;
-//  }
-
-  private static long solve(long num) {
-
-    //4216282
-    long start = (long) Math.ceil(Math.sqrt(num));
-    long first = start;
-    long second = start;
-
-    while (first > 0 && !isPrime(first, 100)) {
-      first--;
+  private static void brute_force(int i) {
+    int[] arr = new int[i - 1];
+    for (int j = 1; j <= arr.length; j++) {
+      arr[j - 1] = j;
     }
+    TreeMap<Integer, String> m = new TreeMap<>();
 
-    if (second != first) {
-      while (second > 0 && !isPrime(second, 100)) {
-        second++;
+    int k = arr.length + 1;
+    for (int l = (1 << k) - 1; l >= 0; l--) {
+      long v = 1;
+      for (int g = 0; g < arr.length; g++) {
+        if (((l >> g) & 1) == 1) {
+          v = (v * arr[g]) % k;
+        }
       }
 
-      if (second * first <= num) {
-        return second * first;
+      if (v == 1) {
+        int count = 0;
+        StringJoiner sj = new StringJoiner(" ");
+        for (int g = 0; g < arr.length; g++) {
+          if (((l >> g) & 1) == 1) {
+            count++;
+            sj.add(Integer.toString(arr[g]));
+          }
+        }
+        m.put(count, sj.toString());
       }
-
-    }
-    second = first - 1;
-    while (second > 0 && !isPrime(second, 100)) {
-      second--;
     }
 
-    return second * first;
+    System.out.printf("for num = %d , max length is : %d %n", i, m.lastKey());
+    System.out.println(m.get(m.lastKey()));
   }
 
-  static long pow(long n, long k, long m) {
-    if (k == 0) {
+  private static void solve(Print print, int n) {
+
+    int co = 1;
+    StringJoiner sj = new StringJoiner(" ");
+    sj.add("1");
+    for (int i = 2; i < n; i++) {
+      if (gcd(i, n) == 1) {
+        co++;
+        sj.add(Integer.toString(i));
+      }
+    }
+
+    print.printLine(Integer.toString(co));
+    print.printLine(sj.toString());
+
+
+  }
+
+  static int gcd(int a, int b) {
+    while (b != 0) {
+      int t = a;
+      a = b;
+      b = t % b;
+    }
+    return a;
+  }
+
+  static int modInverse(int a, int m) {
+    int m0 = m;
+    int y = 0, x = 1;
+
+    if (m == 1) {
+      return 0;
+    }
+
+    while (a > 1) {
+      // q is quotient
+      int q = a / m;
+
+      int t = m;
+
+      // m is remainder now, process
+      // same as Euclid's algo
+      m = a % m;
+      a = t;
+      t = y;
+
+      // Update x and y
+      y = x - q * y;
+      x = t;
+    }
+
+    // Make x positive
+    if (x < 0) {
+      x += m0;
+    }
+
+    return x;
+  }
+
+  static long add(long a, long b, long MOD) {
+    return (a % MOD + b % MOD) % MOD;
+  }
+
+  static long multiply(long a, long b, long MOD) {
+    return (a % MOD * b % MOD) % MOD;
+  }
+
+  static long subtract(long a, long b, long MOD) {
+    return ((a % MOD - b % MOD) % MOD + MOD) % MOD;
+  }
+
+  static long inverse(long a, long MOD) {
+    return pow(a, MOD - 2, MOD);
+  }
+
+  static long divide(long a, long b, long MOD) {
+    return multiply(a, inverse(b, MOD), MOD);
+  }
+
+  static long pow(long a, long n, long MOD) {
+    if (n == 0) {
       return 1;
     }
-
-    long x = pow(n, k / 2, m);
-    if ((k & 1) == 1) {
-      return ((n % m * x % m) * x % m) % m;
+    long x = pow(a, n / 2, MOD);
+    if (n % 2 == 1) {
+      return multiply(multiply(x, x, MOD), a, MOD);
+    } else {
+      return multiply(x, x, MOD);
     }
-    return (x % m * x % m) % m;
-  }
-
-  private static boolean singleTest(long n) {
-    long exp = n - 1;
-
-    while ((exp & 1) == 0) {
-      exp = exp >> 1;
-    }
-
-    long a = 2 + (long) (Math.random() * (n - 3));
-
-    if (pow(a, exp, n) == 1) {
-      return true;
-    }
-
-    while (exp < n - 1) {
-      if ((n + pow(a, exp, n)) % n == n - 1) {
-        return true;
-      }
-      exp = exp << 1;
-    }
-
-    return false;
-  }
-
-
-  static boolean isPrime(long n, long trials) {
-
-    if (n == 1) {
-      return false;
-    }
-    if (n == 2) {
-      return true;
-    }
-
-    for (int i = 0; i < trials; i++) {
-      if (!singleTest(n)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   static class Scan {
