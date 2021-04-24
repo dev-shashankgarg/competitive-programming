@@ -20,21 +20,31 @@ public class B {
       s = scan.scanString().split(" ");
       int[] data = new int[n];
       int xor = 0;
-      boolean flag = true;
       for (int i = 0; i < n; i++) {
         data[i] = Integer.parseInt(s[i]);
-        if (i > 0 && data[i] != data[i - 1]) {
-          flag = false;
-        }
         xor ^= data[i];
       }
 
-      print.printLine(xor == 0 || flag ? "YES" : "NO");
+      print.printLine(xor == 0 || check(data, xor) ? "YES" : "NO");
 
     });
 
     print.close();
 
+  }
+
+  private static boolean check(int[] data, int xor) {
+    int partitions = 0;
+    int y = 0;
+    for (int x : data) {
+      y = y ^ x;
+      if (y == xor) {
+        partitions++;
+        y = 0;
+      }
+    }
+
+    return partitions > 1;
   }
 
   static class Scan {

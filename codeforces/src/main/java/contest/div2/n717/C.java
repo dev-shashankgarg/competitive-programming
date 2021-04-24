@@ -1,14 +1,10 @@
-package contest.div2.n716;
+package contest.div2.n717;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.TreeMap;
 
 public class C {
 
@@ -16,149 +12,56 @@ public class C {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    for (int i = 2; i <= 20; i += 1) {
-//      brute_force(i);
-//    }
-
     int n = scan.scanInt();
-    solve(print, n);
+    int[] data = new int[n];
+
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+      data[i] = scan.scanInt();
+      sum += data[i];
+    }
+
+    if (sum % 2 == 1 || !knapsack(data, sum / 2)) {
+      print.printLine("0");
+    } else {
+      print.printLine("1");
+      while (true) {
+        int odd = -1;
+        for (int i = 0; i < n; i++) {
+          if (data[i] % 2 == 0) {
+            data[i] = data[i] / 2;
+          } else {
+            odd = i + 1;
+            break;
+          }
+        }
+
+        if (odd != -1) {
+          print.printLine(Integer.toString(odd));
+          break;
+        }
+      }
+    }
     print.close();
 
 
   }
 
-  private static void brute_force(int i) {
-    int[] arr = new int[i - 1];
-    for (int j = 1; j <= arr.length; j++) {
-      arr[j - 1] = j;
-    }
-    TreeMap<Integer, String> m = new TreeMap<>();
+  private static boolean knapsack(int[] data, int target) {
+    int[][] dp = new int[data.length + 1][target + 1];
 
-    int k = arr.length + 1;
-    for (int l = (1 << k) - 1; l >= 0; l--) {
-      long v = 1;
-      for (int g = 0; g < arr.length; g++) {
-        if (((l >> g) & 1) == 1) {
-          v = (v * arr[g]) % k;
+    for (int i = 1; i < dp.length; i++) {
+      int val = data[i - 1];
+      for (int j = 1; j < dp[i].length; j++) {
+        if (val > j) {
+          dp[i][j] = dp[i - 1][j];
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], val + dp[i - 1][j - val]);
         }
       }
-
-      if (v == 1) {
-        int count = 0;
-        StringJoiner sj = new StringJoiner(" ");
-        for (int g = 0; g < arr.length; g++) {
-          if (((l >> g) & 1) == 1) {
-            count++;
-            sj.add(Integer.toString(arr[g]));
-          }
-        }
-        m.put(count, sj.toString());
-      }
     }
 
-    System.out.printf("for num = %d , max length is : %d %n", i, m.lastKey());
-    System.out.println(m.get(m.lastKey()));
-  }
-
-  private static void solve(Print print, int n) {
-    long co = 1;
-    StringJoiner sj = new StringJoiner(" ");
-    sj.add("1");
-    List<Long> li = new ArrayList<>();
-    long p = 1;
-    for (long i = 2; i < n; i++) {
-      if (gcd(i, n) == 1) {
-        co++;
-        li.add(i);
-        p = (p * i) % n;
-      }
-    }
-
-    if (p != 1) {
-      li.remove(li.get(li.size() - 1));
-      co--;
-    }
-
-    for (long x : li) {
-      sj.add(Long.toString(x));
-    }
-
-    print.printLine(Long.toString(co));
-    print.printLine(sj.toString());
-  }
-
-  static long gcd(long a, long b) {
-    while (b != 0) {
-      long t = a;
-      a = b;
-      b = t % b;
-    }
-    return a;
-  }
-
-  static int modInverse(int a, int m) {
-    int m0 = m;
-    int y = 0, x = 1;
-
-    if (m == 1) {
-      return 0;
-    }
-
-    while (a > 1) {
-      // q is quotient
-      int q = a / m;
-
-      int t = m;
-
-      // m is remainder now, process
-      // same as Euclid's algo
-      m = a % m;
-      a = t;
-      t = y;
-
-      // Update x and y
-      y = x - q * y;
-      x = t;
-    }
-
-    // Make x positive
-    if (x < 0) {
-      x += m0;
-    }
-
-    return x;
-  }
-
-  static long add(long a, long b, long MOD) {
-    return (a % MOD + b % MOD) % MOD;
-  }
-
-  static long multiply(long a, long b, long MOD) {
-    return (a % MOD * b % MOD) % MOD;
-  }
-
-  static long subtract(long a, long b, long MOD) {
-    return ((a % MOD - b % MOD) % MOD + MOD) % MOD;
-  }
-
-  static long inverse(long a, long MOD) {
-    return pow(a, MOD - 2, MOD);
-  }
-
-  static long divide(long a, long b, long MOD) {
-    return multiply(a, inverse(b, MOD), MOD);
-  }
-
-  static long pow(long a, long n, long MOD) {
-    if (n == 0) {
-      return 1;
-    }
-    long x = pow(a, n / 2, MOD);
-    if (n % 2 == 1) {
-      return multiply(multiply(x, x, MOD), a, MOD);
-    } else {
-      return multiply(x, x, MOD);
-    }
+    return target == dp[data.length][target];
   }
 
   static class Scan {
