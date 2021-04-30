@@ -1,25 +1,84 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.educational.n108;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class C {
+
+  private static int n;
+  private static long[] u;
+  private static long[] sk;
+  private static HashMap<Long, List<Long>> uniMap;
+
+  private static long getSum(List<Long> li, int r) {
+    if (r <= 0) {
+      return 0;
+    }
+    return li.get(r - 1);
+  }
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+
+      n = scan.scanInt();
+      u = new long[n];
+      sk = new long[n];
+      uniMap = new HashMap<>();
+
+      String[] arr = scan.scanString().split(" ");
+      for (int i = 0; i < arr.length; i++) {
+        u[i] = Long.parseLong(arr[i]);
+      }
+
+      arr = scan.scanString().split(" ");
+      for (int i = 0; i < arr.length; i++) {
+        sk[i] = Long.parseLong(arr[i]);
+
+        List<Long> li = uniMap.getOrDefault(u[i], new ArrayList<>());
+        li.add(sk[i]);
+        uniMap.put(u[i], li);
+      }
+
+      List<List<Long>> values = new ArrayList<>(uniMap.values());
+
+      long[] ans = new long[n];
+      for (int i = 0; i < values.size(); i++) {
+        List<Long> li = values.get(i);
+        if (li.size() > 0) {
+          li.sort(Comparator.comparingLong(a -> a));
+          for (int j = 1; j < li.size(); j++) {
+            li.set(j, li.get(j) + li.get(j - 1));
+          }
+          for (int k = 0; k < li.size(); k++) {
+            int mod = k + 1;
+            ans[k] += li.get(li.size() - 1);
+            int leftOver = li.size() % mod;
+            ans[k] -= getSum(li, leftOver);
+          }
+        }
+      }
+
+      StringJoiner sj = new StringJoiner(" ");
+      for (long x : ans) {
+        sj.add(Long.toString(x));
+      }
+      print.printLine(sj.toString());
+
+    });
+    print.close();
 
   }
 
@@ -163,4 +222,3 @@ public class Solution {
   }
 
 }
-```

@@ -1,25 +1,30 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.educational.n108;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class A {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      String[] in = scan.scanString().split(" ");
+      long r = Long.parseLong(in[0]);
+      long b = Long.parseLong(in[1]);
+      long d = Long.parseLong(in[2]);
+
+      boolean val = Math.max(r, b) - Math.min(r, b) <= Math.min(r, b) * d;
+      print.printLine(val ? "YES" : "NO");
+    });
+
+    print.close();
 
   }
 
@@ -163,4 +168,3 @@ public class Solution {
   }
 
 }
-```

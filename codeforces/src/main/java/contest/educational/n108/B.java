@@ -1,26 +1,70 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.educational.n108;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class B {
+
+  private static long n;
+  private static long m;
+  private static long k;
+  private static int[][] directions = {{1, 0, 0, 1}, {0, 1, 1, 0}};
+  private static Boolean[][][] cache;
+
+  private static boolean valid(long i, long j) {
+    return i >= 1 && i <= n && j >= 1 && j <= m;
+  }
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      String[] in = scan.scanString().split(" ");
+      n = Long.parseLong(in[0]);
+      m = Long.parseLong(in[1]);
+      k = Long.parseLong(in[2]);
 
+      //cache = new Boolean[(int) n + 1][(int) m + 1][(int) k + 1];
+
+      //boolean val = solve(1, 1, 0);
+      boolean val = k == ((n * m) - 1);
+      print.printLine(val ? "YES" : "NO");
+    });
+
+    print.close();
+  }
+
+  private static boolean solve(int i, int j, long cost) {
+    if (i == n && j == m) {
+      System.out.println(cost);
+      return cost == k;
+    }
+
+    if (cost > k) {
+      return false;
+    }
+
+    if (cache[i][j][(int) cost] != null) {
+      return cache[i][j][(int) cost];
+    }
+    for (int[] d : directions) {
+      int ni = i + d[0];
+      int nj = j + d[1];
+      if (valid(ni, nj)) {
+        long nCost = cost + (long) i * d[2] + (long) j * d[3];
+        boolean val = solve(ni, nj, nCost);
+        if (val) {
+          return cache[i][j][(int) cost] = true;
+        }
+      }
+    }
+    return cache[i][j][(int) cost] = false;
   }
 
   static class Scan {
@@ -163,4 +207,3 @@ public class Solution {
   }
 
 }
-```

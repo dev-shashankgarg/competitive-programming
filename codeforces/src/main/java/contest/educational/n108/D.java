@@ -1,6 +1,4 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.educational.n108;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,18 +6,59 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
 
-public class Solution {
+public class D {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
 //    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
+//    IntStream.range(0, t).forEach(test -> {
 //
 //    });
-//
-//    print.close();
+
+    int n = scan.scanInt();
+    long[] a = new long[n];
+    long[] b = new long[n];
+
+    long sum = 0;
+
+    String[] arr = scan.scanString().split(" ");
+    for (int i = 0; i < arr.length; i++) {
+      a[i] = Long.parseLong(arr[i]);
+    }
+
+    arr = scan.scanString().split(" ");
+    for (int i = 0; i < arr.length; i++) {
+      b[i] = Long.parseLong(arr[i]);
+      sum += (b[i] * a[i]);
+    }
+
+    long[][] dp = new long[n][n];
+    // 0 1 2 3 4 5
+
+    for (int gap = 1; gap < n; gap++) {
+      for (int i = 0; i + gap < n; i++) {
+        int j = i + gap;
+        long diff = (a[j] * b[i] + a[i] * b[j]) - (a[i] * b[i] + a[j] * b[j]);
+        if (j - i <= 2) {
+          dp[i][j] = diff;
+        } else {
+          dp[i][j] = diff + dp[i + 1][j - 1];
+        }
+      }
+    }
+
+    long max = 0;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        max = Math.max(max, dp[i][j]);
+      }
+    }
+
+    print.printLine(Long.toString(max + sum));
+
+    print.close();
 
   }
 
@@ -163,4 +202,3 @@ public class Solution {
   }
 
 }
-```
