@@ -1,28 +1,68 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.div3.n719;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
-public class Solution {
+public class E {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      int n = scan.scanInt();
+      char[] arr = scan.scanString().toCharArray();
+      int[] data = new int[arr.length];
+      for (int i = 0; i < arr.length; i++) {
+        data[i] = (arr[i] == '*' ? 1 : 0);
+      }
 
+      long ans = solve(data);
+      print.printLine(Long.toString(ans));
+    });
+
+    print.close();
+
+  }
+
+  private static long solve(int[] data) {
+    int window = 0;
+    for (int x : data) {
+      window += x;
+    }
+    if (window == data.length || window == 0) {
+      return 0;
+    }
+
+    List<Integer> li = new ArrayList<>();
+    for (int i = 0; i < data.length; i++) {
+      if (data[i] == 1) {
+        li.add(i);
+      }
+    }
+
+    int size = li.size();
+    int median = li.get(size / 2);
+
+    long tc = 0;
+    for (int x : li) {
+      tc += Math.abs(x - median);
+    }
+
+    int ra = size / 2;
+    if (size % 2 == 1) {
+      return tc - (((long) ra * (ra + 1)));
+    }
+
+    return tc - (((long) ra * (ra + 1))) + (ra);
   }
 
   static class Scan {
@@ -112,8 +152,8 @@ public class Solution {
       return doub * neg;
     }
 
-    public Integer[] scan1dIntArray() {
-      String[] s = this.scanString().split(" ");
+    public Integer[] scan1dIntArray(Scan scan) {
+      String[] s = scan.scanString().split(" ");
       Integer[] arr = new Integer[s.length];
       for (int i = 0; i < s.length; i++) {
         arr[i] = Integer.parseInt(s[i]);
@@ -121,10 +161,10 @@ public class Solution {
       return arr;
     }
 
-    public Integer[][] scan2dIntArray(int n, int m) {
+    public Integer[][] scan2dIntArray(Scan scan, int n, int m) {
       Integer[][] arr = new Integer[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = Integer.parseInt(s[i]);
         }
@@ -132,14 +172,14 @@ public class Solution {
       return arr;
     }
 
-    public String[] scan1dStringArray() {
-      return this.scanString().split(" ");
+    public String[] scan1dStringArray(Scan scan) {
+      return scan.scanString().split(" ");
     }
 
-    public String[][] scan2dStringArray(int n, int m) {
+    public String[][] scan2dStringArray(Scan scan, int n, int m) {
       String[][] arr = new String[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = s[i];
         }
@@ -147,8 +187,8 @@ public class Solution {
       return arr;
     }
 
-    public Long[] scan1dLongArray() {
-      String[] s = this.scanString().split(" ");
+    public Long[] scan1dLongArray(Scan scan) {
+      String[] s = scan.scanString().split(" ");
       Long[] arr = new Long[s.length];
       for (int i = 0; i < s.length; i++) {
         arr[i] = Long.parseLong(s[i]);
@@ -156,10 +196,10 @@ public class Solution {
       return arr;
     }
 
-    public Long[][] scan2dLongArray(int n, int m) {
+    public Long[][] scan2dLongArray(Scan scan, int n, int m) {
       Long[][] arr = new Long[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = Long.parseLong(s[i]);
         }
@@ -274,4 +314,3 @@ public class Solution {
   }
 
 }
-```

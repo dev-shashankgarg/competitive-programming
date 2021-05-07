@@ -1,27 +1,45 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.div3.n719;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
-public class Solution {
+public class A {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      int n = scan.scanInt();
+      char[] arr = scan.scanString().toCharArray();
+      boolean ans = true;
+
+      Map<Character, Integer> map = new HashMap<>();
+      for (int i = 0; i < arr.length; i++) {
+        char c = arr[i];
+        if (!map.containsKey(c)) {
+          map.put(c, i);
+        } else if (map.get(c) == i - 1) {
+          map.put(c, i);
+        } else {
+          ans = false;
+          break;
+        }
+
+      }
+      print.printLine(ans ? "YES" : "NO");
+
+    });
+
+    print.close();
 
   }
 
@@ -274,4 +292,3 @@ public class Solution {
   }
 
 }
-```

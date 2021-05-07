@@ -1,6 +1,4 @@
-## Sample java template for fast IO operations
-
-```java
+package contest.div3.n719;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,19 +8,40 @@ import java.util.InputMismatchException;
 import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
-public class Solution {
+public class B {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-//    int t = scan.scanInt();
-//    IntStream.range(0 , t).forEach(test -> {
-//
-//    });
-//
-//    print.close();
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      long n = Long.parseLong(scan.scanString());
+      long digits = count(n);
+      long ans = 9L * (digits - 1);
 
+      StringJoiner sj = new StringJoiner("");
+      for (long i = 0; i < digits; i++) {
+        sj.add("1");
+      }
+
+      long start = Integer.parseInt(sj.toString());
+      long val = start;
+      while (val <= n) {
+        ans++;
+        val += start;
+      }
+
+      print.printLine(Long.toString(ans));
+
+    });
+
+    print.close();
+
+  }
+
+  private static long count(Long n) {
+    return Long.toString(n).length();
   }
 
   static class Scan {
@@ -112,8 +131,8 @@ public class Solution {
       return doub * neg;
     }
 
-    public Integer[] scan1dIntArray() {
-      String[] s = this.scanString().split(" ");
+    public Integer[] scan1dIntArray(Scan scan) {
+      String[] s = scan.scanString().split(" ");
       Integer[] arr = new Integer[s.length];
       for (int i = 0; i < s.length; i++) {
         arr[i] = Integer.parseInt(s[i]);
@@ -121,10 +140,10 @@ public class Solution {
       return arr;
     }
 
-    public Integer[][] scan2dIntArray(int n, int m) {
+    public Integer[][] scan2dIntArray(Scan scan, int n, int m) {
       Integer[][] arr = new Integer[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = Integer.parseInt(s[i]);
         }
@@ -132,14 +151,14 @@ public class Solution {
       return arr;
     }
 
-    public String[] scan1dStringArray() {
-      return this.scanString().split(" ");
+    public String[] scan1dStringArray(Scan scan) {
+      return scan.scanString().split(" ");
     }
 
-    public String[][] scan2dStringArray(int n, int m) {
+    public String[][] scan2dStringArray(Scan scan, int n, int m) {
       String[][] arr = new String[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = s[i];
         }
@@ -147,8 +166,8 @@ public class Solution {
       return arr;
     }
 
-    public Long[] scan1dLongArray() {
-      String[] s = this.scanString().split(" ");
+    public Long[] scan1dLongArray(Scan scan) {
+      String[] s = scan.scanString().split(" ");
       Long[] arr = new Long[s.length];
       for (int i = 0; i < s.length; i++) {
         arr[i] = Long.parseLong(s[i]);
@@ -156,10 +175,10 @@ public class Solution {
       return arr;
     }
 
-    public Long[][] scan2dLongArray(int n, int m) {
+    public Long[][] scan2dLongArray(Scan scan, int n, int m) {
       Long[][] arr = new Long[n][m];
       for (int i = 0; i < n; i++) {
-        String[] s = this.scanString().split(" ");
+        String[] s = scan.scanString().split(" ");
         for (int j = 0; j < m; j++) {
           arr[i][j] = Long.parseLong(s[i]);
         }
@@ -274,4 +293,3 @@ public class Solution {
   }
 
 }
-```
