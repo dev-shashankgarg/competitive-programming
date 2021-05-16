@@ -126,7 +126,7 @@ public class Solution {
       for (int i = 0; i < n; i++) {
         String[] s = this.scanString().split(" ");
         for (int j = 0; j < m; j++) {
-          arr[i][j] = Integer.parseInt(s[i]);
+          arr[i][j] = Integer.parseInt(s[j]);
         }
       }
       return arr;
@@ -141,7 +141,22 @@ public class Solution {
       for (int i = 0; i < n; i++) {
         String[] s = this.scanString().split(" ");
         for (int j = 0; j < m; j++) {
-          arr[i][j] = s[i];
+          arr[i][j] = s[j];
+        }
+      }
+      return arr;
+    }
+
+    public char[] scan1dCharArray() {
+      return this.scanString().toCharArray();
+    }
+
+    public char[][] scan2dCharArray(int n, int m) {
+      char[][] arr = new char[n][m];
+      for (int i = 0; i < n; i++) {
+        char[] s = this.scanString().toCharArray();
+        for (int j = 0; j < m; j++) {
+          arr[i][j] = s[j];
         }
       }
       return arr;
@@ -161,7 +176,7 @@ public class Solution {
       for (int i = 0; i < n; i++) {
         String[] s = this.scanString().split(" ");
         for (int j = 0; j < m; j++) {
-          arr[i][j] = Long.parseLong(s[i]);
+          arr[i][j] = Long.parseLong(s[j]);
         }
       }
       return arr;
@@ -234,6 +249,24 @@ public class Solution {
         StringJoiner sj = new StringJoiner(" ");
         for (String y : x) {
           sj.add(y);
+        }
+        printLine(sj.toString());
+      }
+    }
+
+    public void printLine(char[] arr) {
+      StringJoiner sj = new StringJoiner(" ");
+      for (char x : arr) {
+        sj.add(Character.toString(x));
+      }
+      printLine(sj.toString());
+    }
+
+    public void printLine(char[][] arr) {
+      for (char[] x : arr) {
+        StringJoiner sj = new StringJoiner(" ");
+        for (char y : x) {
+          sj.add(Character.toString(y));
         }
         printLine(sj.toString());
       }
