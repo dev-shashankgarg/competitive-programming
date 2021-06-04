@@ -1,30 +1,67 @@
-Java Template for Kickstart Submission
+package com.kickstart.y2021.c;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class B {
+
+  private static List<Long> li;
+  private static Set<Long> set;
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
+    precompute();
     int tests = scan.scanInt();
     IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
+
+      long n = Long.parseLong(scan.scanString());
+      long ans = solve(n);
+
+      print.printLine(String.format("Case #%d: %d", test, ans));
 
     });
 
     print.close();
   }
-  
+
+  private static void precompute() {
+    li = new ArrayList<>();
+    set = new HashSet<>();
+    long x = 1;
+    long limit = 1000_000_000_000_00L;
+
+    while (x * x <= limit) {
+      long val = x * x;
+      li.add(val);
+      set.add(val);
+      x += 2;
+    }
+  }
+
+  private static long solve(long n) {
+    long m = 8L * n;
+    long count = 0;
+    for (int i = 1; i <= li.size(); i += 2) {
+      long val = li.get((i - 1) / 2);
+      val -= m;
+      if (set.contains(val)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +343,5 @@ public class Solution {
     }
   }
 
-  
 
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file

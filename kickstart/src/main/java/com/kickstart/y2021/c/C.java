@@ -1,15 +1,14 @@
-Java Template for Kickstart Submission
+package com.kickstart.y2021.c;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
 import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class C {
 
   public static void main(String[] args) {
     Print print = new Print();
@@ -17,14 +16,14 @@ public class Solution {
 
     int tests = scan.scanInt();
     IntStream.rangeClosed(1, tests).forEach(test -> {
-      
+
       print.printLine(String.format("Case #%d: %d", test, 0));
 
     });
 
     print.close();
   }
-  
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +305,5 @@ public class Solution {
     }
   }
 
-  
 
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file

@@ -1,30 +1,94 @@
-Java Template for Kickstart Submission
+package contest.div2.n722;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
+import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class C {
+
+  private static HashMap<Integer, Node> map;
+  private static Long[][] cache;
+  private static HashSet<Integer> vi;
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    int tests = scan.scanInt();
-    IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      int n = scan.scanInt();
+      map = new HashMap<>();
+      cache = new Long[n + 1][2];
+      vi = new HashSet<>();
 
+      Integer[][] vals = scan.scan2dIntArray(n, 2);
+      for (int i = 1; i <= n; i++) {
+        map.put(i, new Node(i, vals[i - 1][0], vals[i - 1][1]));
+      }
+      Integer[][] edges = scan.scan2dIntArray(n - 1, 2);
+      for (int i = 0; i < edges.length; i++) {
+        int a = edges[i][0];
+        int b = edges[i][1];
+        map.get(a).children.add(map.get(b));
+        map.get(b).children.add(map.get(a));
+      }
+
+      print.printLine(Long.toString(Math.max(solve(1, 0), solve(1, 1))));
     });
 
     print.close();
+
   }
-  
+
+  private static long solve(int n, int d) {
+    long ans = 0;
+
+    if (cache[n][d] != null) {
+      return cache[n][d];
+    }
+
+    vi.add(n);
+    for (Node next : map.get(n).children) {
+      if (!vi.contains(next.id)) {
+        ans += Math.max(Math.abs(map.get(n).val[d] - next.val[d]) + solve(next.id, d),
+            Math.abs(map.get(n).val[d] - next.val[(d + 1) % 2]) + solve(next.id, (d + 1) % 2));
+      }
+    }
+    vi.remove(n);
+
+    return cache[n][d] = ans;
+  }
+
+  static class Node {
+
+    int id;
+    int[] val;
+    List<Node> children;
+
+    public Node(int id, int l, int r) {
+      this.id = id;
+      this.val = new int[]{l, r};
+      this.children = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+      return "Node{" +
+          "id=" + id +
+          ", children=" + children +
+          '}';
+    }
+  }
+
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +370,4 @@ public class Solution {
     }
   }
 
-  
-
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file

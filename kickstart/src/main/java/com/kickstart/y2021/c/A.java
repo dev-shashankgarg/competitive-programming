@@ -1,15 +1,20 @@
-Java Template for Kickstart Submission
+package com.kickstart.y2021.c;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
 import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class A {
+
+  private static char[] data;
+  private static int n;
+  private static int k;
+  private static long ans;
+  private static int mod = 1_000_000_007;
 
   public static void main(String[] args) {
     Print print = new Print();
@@ -17,14 +22,63 @@ public class Solution {
 
     int tests = scan.scanInt();
     IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
 
+      Integer[] ins = scan.scan1dIntArray();
+      data = scan.scan1dCharArray();
+      n = ins[0];
+      k = ins[1];
+      solve(0, n - 1);
+      print.printLine(String.format("Case #%d: %d", test, (ans % mod)));
     });
 
     print.close();
   }
-  
+
+  private static void solve(int l, int r) {
+//    if (data[l] > data[r]) {
+//      int avail = data[r] -
+//    }
+  }
+
+
+  static class MO {
+
+    //MOD Operations
+
+    static long add(long a, long b, long MOD) {
+      return (a % MOD + b % MOD) % MOD;
+    }
+
+    static long multiply(long a, long b, long MOD) {
+      return (a % MOD * b % MOD) % MOD;
+    }
+
+    static long subtract(long a, long b, long MOD) {
+      return ((a % MOD - b % MOD) % MOD + MOD) % MOD;
+    }
+
+    static long inverse(long a, long MOD) {
+      return pow(a, MOD - 2, MOD);
+    }
+
+    static long divide(long a, long b, long MOD) {
+      return multiply(a, inverse(b, MOD), MOD);
+    }
+
+    static long pow(long a, long n, long MOD) {
+      if (n == 0) {
+        return 1;
+      }
+      long x = pow(a, n / 2, MOD);
+      if (n % 2 == 1) {
+        return multiply(multiply(x, x, MOD), a, MOD);
+      } else {
+        return multiply(x, x, MOD);
+      }
+    }
+
+  }
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +360,5 @@ public class Solution {
     }
   }
 
-  
 
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file

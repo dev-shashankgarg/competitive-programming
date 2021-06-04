@@ -1,30 +1,65 @@
-Java Template for Kickstart Submission
+package contest.div2.n722;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
 import java.util.StringJoiner;
+import java.util.stream.IntStream;
 
-public class Solution {
+public class B {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    int tests = scan.scanInt();
-    IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
-
+    int t = scan.scanInt();
+    IntStream.range(0, t).forEach(test -> {
+      int n = scan.scanInt();
+      Long[] data = scan.scan1dLongArray();
+      print.printLine(Integer.toString(solve(data)));
     });
 
     print.close();
+
   }
-  
+
+  private static int solve(Long[] data) {
+    Arrays.sort(data);
+    int ans = 0;
+    if (data[0] >= 1) {
+      return 1;
+    }
+
+    long min = Long.MAX_VALUE;
+    int i = 0;
+    while (i < data.length && data[i] <= 0) {
+
+      if (i > 0) {
+        min = Math.min(min, Math.abs(Math.abs(data[i - 1] - data[i])));
+      }
+
+      ans++;
+      i++;
+    }
+
+    if (i == data.length) {
+      return ans;
+    }
+
+    if (i == 1) {
+      return ans + 1;
+    }
+
+    if (data[i] <= min) {
+      return ans + 1;
+    }
+
+    return ans;
+  }
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +341,4 @@ public class Solution {
     }
   }
 
-  
-
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file

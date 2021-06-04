@@ -1,30 +1,27 @@
-Java Template for Kickstart Submission
+package contest.div2.n722;
 
-```
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.InputMismatchException;
-import java.util.stream.IntStream;
 import java.util.StringJoiner;
 
-public class Solution {
+public class D {
 
   public static void main(String[] args) {
     Print print = new Print();
     Scan scan = new Scan();
 
-    int tests = scan.scanInt();
-    IntStream.rangeClosed(1, tests).forEach(test -> {
-      
-      print.printLine(String.format("Case #%d: %d", test, 0));
+//    int t = scan.scanInt();
+//    IntStream.range(0 , t).forEach(test -> {
+//
+//    });
+//
+//    print.close();
 
-    });
-
-    print.close();
   }
-  
+
   static class Scan {
 
     private byte[] buf = new byte[1024];
@@ -306,13 +303,4 @@ public class Solution {
     }
   }
 
-  
-
 }
-```
-
-Important:
-
-1. remove **public** identifier from class
-2. rename classname to **Solution** before submission
-3. remove package name from class file
